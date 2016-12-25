@@ -14,26 +14,15 @@ end
 
 % dirb = 'train_'; patient = '1';
 % generate_features(dataDir, featureDir, dirb, patient);
-% 
+ 
 % dirb = 'train_'; patient = '2';
 % generate_features(dataDir, featureDir, dirb, patient);
 
-%% Prepare the data
+% dirb = 'train_'; patient = '3';
+% generate_features(dataDir, featureDir, dirb, patient);
 
-%  X = []
-%  
-%  average = load(strcat(featureDir, '/average_train_1.mat'));
-%  std = load(strcat(featureDir, '/std_train_1.mat'));
-%  
-% % display(average.average(1,2));
-%  
-%  for i = 1:720
-%      X = [X; average.average(i, 1:16), std.standardDev(i, 1:16)]
-%  end
-%  
-%  savedir = fullfile(featureDir, '/X_1.mat');
-%  save(savedir, 'X');
-%  
+%% Prepare Y
+  
 %  Y = [];
 %  
 %  fileOrder = load(strcat(featureDir, '/fileOrder_train_1.mat'));
@@ -52,18 +41,8 @@ end
 %  
 %  savedir = fullfile(featureDir, '/Y_1.mat');
 %  save(savedir, 'Y')
-%   
-%  average = load(strcat(featureDir, '/average_train_2.mat'));
-%  std = load(strcat(featureDir, '/std_train_2.mat'));
-%  
-%   for i = 1:1986
-%       X = [X; average.average(i, 1:16), std.standardDev(i, 1:16)]
-%   end
-%   
-%  savedir = fullfile(featureDir, '/X_2.mat');
-%  save(savedir, 'X');
-%   
-%   Y = []
+  
+%  Y = []
 %  
 %  fileOrder = load(strcat(featureDir, '/fileOrder_train_2.mat'));
 %  
@@ -82,7 +61,22 @@ end
 %  savedir = fullfile(featureDir, '/Y_2.mat');
 %  save(savedir, 'Y');
 
-% the only thing from above that's useful now is finding Y (we've come a long/complicated way)
+% Y = [];
+%  
+% fileOrder = load(strcat(featureDir, '/fileOrder_train_3.mat'));
+%  
+% for i = 1:2058
+%     split = strsplit(char(fileOrder.fileOrder(i, 1)),'_');
+%      
+%     if char(split(2)) == '0.mat'
+%         Y = [Y; 0];
+%     else
+%         Y = [Y; 1];
+%     end 
+% end
+%  
+% savedir = fullfile(featureDir, '/Y_3.mat');
+% save(savedir, 'Y');
 
 %% Train a model based on the data.
 
@@ -122,16 +116,38 @@ for i = 1:16
     patient2dtree{i} = fitctree(patient2x(:, :, i), Y_2.Y);
 end
 
-% view(patient1dtree{3},'mode','graph')
+% view(patient1dtree{3},'mode','graph');
 
-%% Predict Y for the test data.
+% And, finally, for the third patient.
+
+average_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/average_train_3.mat');
+std_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/std_train_3.mat');
+
+patient3x = zeros(2058, 2, 16);
+for i = 1:16
+    patient3x(:, :, i) = [average_3.average(:, i) std_3.standardDev(:, i)];
+end
+
+Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
+
+patient3dtree = cell(16, 1);
+for i = 1:16  
+    patient3dtree{i} = fitctree(patient3x(:, :, i), Y_3.Y);
+end
+
+%view(patient3dtree{3},'mode','graph');
+
+%% Predict for the test data.
 
 % We'll have to generate features again
 
 % dirb = 'test_'; patient = '1';
 % generate_features(dataDir, featureDir, dirb, patient);
-%  
+
 % dirb = 'test_'; patient = '2';
+% generate_features(dataDir, featureDir, dirb, patient);
+
+% dirb = 'test_'; patient = '3';
 % generate_features(dataDir, featureDir, dirb, patient);
 
 average_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/average_test_1.mat');
@@ -156,17 +172,38 @@ end
 
 prediction_2 = mean(Y.');
 
-% you know what is hard? writing to csv from matlab
+average_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/average_test_3.mat');
+std_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/std_test_3.mat');
+  
+Y = zeros(690, 16);
+for i = 1:16
+    X = [average_3.average(:, i) std_3.standardDev(:, i)];
+    Y(:, i) = predict(patient3dtree{i}, X);
+end
 
-% fileID = fopen('/Users/Gale/Documents/kaggle/Seizure-Prediction/submission.csv','wt');
-% [rows,cols]=size(final)
-% 
-% for i = 1:rows
-%       fprintf(fileID, '%s,', final{i, 1:1})
-%       fprintf(fileID, '%f\n', final{i, 2})
-% end
-% 
-% fclose(fileID);
+prediction_3 = mean(Y.');
+
+fileID = fopen('/Users/Gale/Documents/Seizure-Prediction/approach01/submission.csv','wt');
+
+fileOrder_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/fileOrder_test_1.mat');
+fileOrder_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/fileOrder_test_2.mat');
+fileOrder_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/fileOrder_test_3.mat');
+
+display('Writing to csv...');
+
+for i = 1:1908
+    if i <= 216
+        fprintf(fileID, '%s,%f\n', char(fileOrder_1.fileOrder(i)), double(prediction_1(i)));
+    elseif i <= 1218
+        fprintf(fileID, '%s,%f\n', char(fileOrder_2.fileOrder(i-216)), double(prediction_2(i-216)));
+    else
+        fprintf(fileID, '%s,%f\n', char(fileOrder_3.fileOrder(i-1218)), double(prediction_3(i-1218)));
+    end
+end
+
+display('Mission accomplished.');
+
+fclose(fileID);
 
 %%
-% TODO: remove data dropouts later
+% there are data dropouts

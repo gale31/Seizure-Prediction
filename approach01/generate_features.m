@@ -17,8 +17,7 @@ for sampleFile = matFiles'
     
     display('Going through...');
         
-    split = strsplit(sampleFile.name,'_');
-    fileOrder = [fileOrder; strcat(split(2), '_', split(3))];
+    fileOrder = [fileOrder; cellstr(sampleFile.name)];
     
     i = i + 1;
          
