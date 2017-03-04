@@ -9,12 +9,12 @@ function generate_features(dataDir, featureDir, trainortest)
 for_test = [];
 for i = 1:2
     trainingdir = fullfile(dataDir, strcat(trainortest, num2str(i)));
-    dirv = dir([trainingdir, '/*.mat'])
+    dirv = dir([trainingdir, '/*.mat']);
     
     j = 0;
     for samplefile = dirv'
         
-        split = strsplit(samplefile.name,'_')
+        split = strsplit(samplefile.name,'_');
         for_test = [for_test; strcat(split(2), '_', split(3))];
       
         j = j + 1;

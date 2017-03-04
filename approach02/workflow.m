@@ -42,7 +42,7 @@ generate_features(dataDir, featureDir, dirb, patient);
  savedir = fullfile(featureDir, '/Y_1.mat');
  save(savedir, 'Y')
   
- Y = [];
+ Y = []
  
  fileOrder = load(strcat(featureDir, '/fileOrder_train_2.mat'));
  
@@ -135,7 +135,7 @@ for i = 1:16
     patient3dtree{i} = fitctree(patient3x(:, :, i), Y_3.Y);
 end
 
-%view(patient3dtree{3},'mode','graph');
+view(patient3dtree{3},'mode','graph');
 
 %% Predict for the test data.
 
