@@ -79,31 +79,6 @@ end
 % save(savedir, 'Y');
 
 %% Train a model based on the data.
- 
-% For the first patient.
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
-features = features_file.features;
-Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
-Y = Y_1.Y;
-
-model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
-features = features_file.features;
-Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
-Y = Y_2.Y;
-
-model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
-features = features_file.features;
-Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
-Y = Y_3.Y;
-
-model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-%view(patient1dtree,'mode','graph');
 
 % We'll have to generate features again
 
@@ -115,16 +90,81 @@ model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), featur
 % 
 % dirb = 'test_'; patient = '3';
 % generate_features(dataDir, featureDir, dirb, patient);
- 
+
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
+% features = features_file.features;
+% Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
+% Y = Y_1.Y;
+% 
+% model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 1 - trained.');
+% 
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
+% features = features_file.features;
+% Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
+% Y = Y_2.Y;
+% 
+% model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 2 - trained.');
+% 
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
+% features = features_file.features;
+% Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
+% Y = Y_3.Y;
+% 
+% model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 3 - trained.');
+
+% First
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model1.mat');
+% model_1patient = model_file.model_1patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
+features = features_file.features;
+Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
+Y = Y_1.Y;
+
+model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on');
+display('Model 1 - trained.');
+
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_1.mat');
 features = features_file.features;
 
 prediction_1 = predict(model_1patient, [features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)]);
    
+
+% Second
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model2.mat');
+% model_2patient = model_file.model_2patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
+features = features_file.features;
+Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
+Y = Y_2.Y;
+
+model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on');
+
+display('Model 2 - trained.');
+
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_2.mat');
 features = features_file.features;
 
 prediction_2 = predict(model_2patient, [features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)]);
+
+% Third
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model3.mat');
+% model_3patient = model_file.model_3patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
+features = features_file.features;
+Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
+Y = Y_3.Y;
+
+model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on');
+display('Model 3 - trained.');
 
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_3.mat');
 features = features_file.features;
@@ -147,14 +187,17 @@ for i = 1:1908
             fprintf(fileID, '%s,%f\n', char(fileOrder_1.file_order(i)), double(prediction_1(i)));
         end
     elseif i <= 1218
-         if prediction_1(i) < 0
-            fprintf(fileID, '%s,%f\n', char(fileOrder_1.file_order(i)), double(0));
+        if prediction_2(i-216) < 0
+            fprintf(fileID, '%s,%f\n', char(fileOrder_2.file_order(i-216)), double(0));
         else
-            fprintf(fileID, '%s,%f\n', char(fileOrder_1.file_order(i)), double(prediction_1(i)));
+            fprintf(fileID, '%s,%f\n', char(fileOrder_2.file_order(i-216)), double(prediction_2(i-216)));
         end
-        fprintf(fileID, '%s,%f\n', char(fileOrder_2.file_order(i-216)), double(prediction_2(i-216)));
     else
-        fprintf(fileID, '%s,%f\n', char(fileOrder_3.file_order(i-1218)), double(prediction_3(i-1218)));
+        if prediction_3(i-1218) < 0
+            fprintf(fileID, '%s,%f\n', char(fileOrder_3.file_order(i-1218)), double(0));
+        else
+            fprintf(fileID, '%s,%f\n', char(fileOrder_3.file_order(i-1218)), double(prediction_3(i-1218)));
+        end
     end
 end
 

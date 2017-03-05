@@ -79,31 +79,6 @@ end
 % save(savedir, 'Y');
 
 %% Train a model based on the data.
- 
-% For the first patient.
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
-features = features_file.features;
-Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
-Y = Y_1.Y;
-
-model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
-features = features_file.features;
-Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
-Y = Y_2.Y;
-
-model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
-features = features_file.features;
-Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
-Y = Y_3.Y;
-
-model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y);
-
-%view(patient1dtree,'mode','graph');
 
 % We'll have to generate features again
 
@@ -115,22 +90,91 @@ model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), featur
 % 
 % dirb = 'test_'; patient = '3';
 % generate_features(dataDir, featureDir, dirb, patient);
- 
+
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
+% features = features_file.features;
+% Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
+% Y = Y_1.Y;
+% 
+% model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 1 - trained.');
+% 
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
+% features = features_file.features;
+% Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
+% Y = Y_2.Y;
+% 
+% model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 2 - trained.');
+% 
+% features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
+% features = features_file.features;
+% Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
+% Y = Y_3.Y;
+% 
+% model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'Method', 'LSBoost', 'NumLearningCycles', 500, 'NPrint', 5, 'Crossval', 'on', 'LearnRate', 0.5);
+% 
+% display('Model 3 - trained.');
+
+% First
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model1.mat');
+% model_1patient = model_file.model_1patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_1.mat');
+features = features_file.features;
+Y_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_1.mat');
+Y = Y_1.Y;
+
+model_1patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'OptimizeHyperparameters', 'auto', 'LearnRate', 0.4);
+display('Model 1 - trained.');
+
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_1.mat');
 features = features_file.features;
 
 prediction_1 = predict(model_1patient, [features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)]);
-   
+
+display('Predictions 1 - made.');
+
+% Second
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model2.mat');
+% model_2patient = model_file.model_2patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_2.mat');
+features = features_file.features;
+Y_2 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_2.mat');
+Y = Y_2.Y;
+
+model_2patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'OptimizeHyperparameters', 'auto', 'LearnRate', 0.4);
+display('Model 2 - trained.');
+
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_2.mat');
 features = features_file.features;
 
 prediction_2 = predict(model_2patient, [features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)]);
 
+display('Predictions 2 - made.');
+
+% Third
+% model_file = load('/Users/Gale/Documents/Seizure-Prediction/approach05/model3.mat');
+% model_3patient = model_file.model_3patient;
+
+features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_train_3.mat');
+features = features_file.features;
+Y_3 = load('/Users/Gale/Documents/Seizure-Prediction/features/Y_3.mat');
+Y = Y_3.Y;
+
+model_3patient = fitrensemble([features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)], Y, 'NumLearningCycles', 500, 'NPrint', 5, 'OptimizeHyperparameters', 'auto', 'LearnRate', 0.4);
+display('Model 3 - trained.');
+
 features_file = load('/Users/Gale/Documents/Seizure-Prediction/features/features_test_3.mat');
 features = features_file.features;
 
 prediction_3 = predict(model_3patient, [features.avmean(:, :), features.std(:, :), features.skewness(:, :), features.kurtosis(:, :), features.activity(:, :), features.mobility(:, :), features.complexity(:, :), features.shentropy(:, :), features.spedge(:, :), features.shentropyDyd(:, :)]);
- 
+
+display('Predictions 3 - made.');
+
 fileID = fopen('/Users/Gale/Documents/Seizure-Prediction/approach05/submission.csv','wt');
 
 fileOrder_1 = load('/Users/Gale/Documents/Seizure-Prediction/features/fileOrder_test_1.mat');
